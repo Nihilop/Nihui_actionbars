@@ -1,0 +1,25 @@
+## Interface: 110200
+## Title: |cff00ff00Nihui|r |cffffffffActionBars|r
+## Author: nihil (based on rnxmUI)
+## Notes: Addon complet pour la gestion des barres d'action - Masks, Spell Break, Placement des textes
+## Version: 1.0
+## IconTexture: Interface/AddOns/Nihui_ab/textures/icon.tga
+## SavedVariables: NihuiActionBarsDB
+
+# Libraries
+libs\libs.xml
+
+# Core files
+init.lua
+config.lua
+
+# Masks
+masks\masks.lua
+
+# Modules
+modules\actionbars.lua
+modules\actionbarstyling.lua
+modules\textplacement.lua
+
+# GUI
+gui\gui.lua
