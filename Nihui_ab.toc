@@ -1,4 +1,4 @@
-## Interface: 110200
+## Interface: 110205
 ## Title: |cff00ff00Nihui|r |cffffffffActionBars|r
 ## Author: nihil (based on rnxmUI)
 ## Notes: Addon complet pour la gestion des barres d'action - Masks, Spell Break, Placement des textes
