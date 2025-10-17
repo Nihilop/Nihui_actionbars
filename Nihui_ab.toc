@@ -3,7 +3,6 @@
 ## Author: nihil (based on rnxmUI)
 ## Notes: Addon complet pour la gestion des barres d'action - Masks, Spell Break, Placement des textes
 ## Version: 1.0.0
-## IconTexture: Interface/AddOns/Nihui_ab/textures/icon.tga
 ## SavedVariables: NihuiActionBarsDB
 
 # Libraries
@@ -19,7 +18,6 @@ masks\masks.lua
 # Modules
 modules\actionbars.lua
 modules\actionbarstyling.lua
-modules\textplacement.lua
 
 # GUI
 gui\gui.lua

@@ -4,7 +4,6 @@ local addonName, ns = ...
 -- Check if AceConfig is available
 local AceConfig = LibStub("AceConfig-3.0", true)
 local AceConfigDialog = LibStub("AceConfigDialog-3.0", true)
-local AceDBOptions = LibStub("AceDBOptions-3.0", true)
 
 if not AceConfig or not AceConfigDialog then
     print("|cff00ff00Nihui ActionBars:|r AceConfig not available, using simple GUI")

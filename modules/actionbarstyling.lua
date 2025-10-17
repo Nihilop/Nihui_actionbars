@@ -227,9 +227,7 @@ local function StyleActionButton(button)
         -- Style the Flipbook texture (cooldown flash animation)
         if button.CooldownFlash.Flipbook then
             if button.CooldownFlash.Flipbook.SetAtlas then
-                button.CooldownFlash.Flipbook:SetAtlas("timerunning-redbutton-glow-mask") -- Original atlas
-                -- or use your custom atlas:
-                -- button.CooldownFlash.Flipbook:SetAtlas("UI-HUD-CoolDownManager-IconOverlay")
+                button.CooldownFlash.Flipbook:SetAtlas("timerunning-redbutton-glow-mask")
             end
         end
 
@@ -243,7 +241,6 @@ local function StyleActionButton(button)
     if button.HighlightTexture then
         button.HighlightTexture:SetAtlas(TEXTURES.HIGHLIGHT)
         button.HighlightTexture:SetAlpha(0.5)
-        --button.HighlightTexture:SetBlendMode("ADD")
         button.HighlightTexture:ClearAllPoints()
         local highlightSize = iconWidth * RATIOS.HIGHLIGHT
         button.HighlightTexture:SetSize(highlightSize, highlightSize)
@@ -301,9 +298,6 @@ local function StyleActionButton(button)
 
     if button.PushedTexture then
         button.PushedTexture:SetAtlas(TEXTURES.PUSHED)
-        --button.PushedTexture:SetDesaturated(true)
-        -- button.PushedTexture:SetVertexColor(1, 0.2, 0.2, 1)
-        --button.PushedTexture:SetBlendMode("ADD")
         button.PushedTexture:ClearAllPoints()
         local pushedSize = iconWidth * RATIOS.PUSHED
         button.PushedTexture:SetSize(pushedSize, pushedSize)

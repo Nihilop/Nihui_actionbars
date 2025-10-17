@@ -8,32 +8,8 @@ ns.modules.masks = Masks
 Masks.AVAILABLE_MASKS = {
     [""] = "None",
     ["interface\\hud\\uicooldownmanagermask"] = "Circular (Default)",
-    ["Interface\\AddOns\\Nihui_ab\\masks\\round.tga"] = "Round Custom",
-    ["Interface\\AddOns\\Nihui_ab\\masks\\square.tga"] = "Square Custom",
-    ["Interface\\AddOns\\Nihui_ab\\masks\\rectangle.tga"] = "Rectangle Custom",
-    ["Interface\\AddOns\\Nihui_ab\\masks\\triangle.tga"] = "Triangle Custom",
 }
 
--- Copy masks from the original addon if they exist
-function Masks:CopyOriginalMasks()
-    local originalMasks = {
-        ["Interface\\AddOns\\rnxmUI\\Masks\\PPortrait.tga"] = "Round Portrait",
-        ["Interface\\AddOns\\rnxmUI\\Masks\\SquarePortrait.tga"] = "Square Portrait",
-        ["Interface\\AddOns\\rnxmUI\\Masks\\RectangleMask.tga"] = "Rectangle Mask",
-        ["Interface\\AddOns\\rnxmUI\\Masks\\UICooldownManagerMask.tga"] = "Cooldown Manager",
-        ["Interface\\AddOns\\rnxmUI\\Masks\\SlantedPlayer.tga"] = "Slanted Player",
-        ["Interface\\AddOns\\rnxmUI\\Masks\\SlantedTarget.tga"] = "Slanted Target",
-    }
-
-    for path, name in pairs(originalMasks) do
-        self.AVAILABLE_MASKS[path] = name
-    end
-end
-
--- Get available masks for configuration
-function Masks:GetAvailableMasks()
-    return self.AVAILABLE_MASKS
-end
 
 -- Validate if a mask exists
 function Masks:ValidateMask(maskPath)
@@ -78,43 +54,15 @@ function Masks:RemoveMask(texture)
     end
 end
 
--- Create a test mask preview
-function Masks:CreateMaskPreview(parent, maskPath, size)
-    size = size or 64
-
-    local frame = CreateFrame("Frame", nil, parent)
-    frame:SetSize(size, size)
-
-    -- Background texture
-    local bg = frame:CreateTexture(nil, "BACKGROUND")
-    bg:SetAllPoints()
-    bg:SetColorTexture(0.2, 0.2, 0.8, 1) -- Blue background
-
-    -- Test texture with mask
-    local texture = frame:CreateTexture(nil, "ARTWORK")
-    texture:SetAllPoints()
-    texture:SetColorTexture(1, 1, 1, 1) -- White foreground
-
-    -- Apply mask
-    self:ApplyMask(texture, maskPath)
-
-    frame.texture = texture
-    frame.background = bg
-
-    return frame
-end
 
 -- Module API
 function Masks:OnEnable()
-    self:CopyOriginalMasks()
+    -- Nothing to do
 end
 
 function Masks:OnDisable()
     -- Nothing to do
 end
-
--- Export masks to namespace
-ns.SpellActivationMasks = Masks.AVAILABLE_MASKS
 
 -- Register the module
 ns.addon:RegisterModule("masks", Masks)
