@@ -10,7 +10,8 @@ local TEXTURES = {
     CHECKED = "UI-HUD-CoolDownManager-IconOverlay",          -- Active/toggled state
     NORMAL = "UI-HUD-CoolDownManager-IconOverlay",           -- Border overlay
     PUSHED = "UI-CooldownManager-ActiveGlow-2x",             -- Pressed/click state
-    ICON_MASK = "interface\\hud\\uicooldownmanagermask",     -- Icon masking (rounded square)
+    ICON_MASK_ATLAS = "UI-HUD-CoolDownManager-Mask",        -- IconMask atlas name
+    ICON_MASK_PATH = "interface\\hud\\uicooldownmanagermask", -- Icon masking texture path
 }
 
 local function StyleActionButton(button)
@@ -40,15 +41,15 @@ local function StyleActionButton(button)
         HIGHLIGHT = 0.98,         -- Hover glow - same size as icon
         CHECKED = 1.0,           -- Active state - same size as icon
         ICON_MASK = 1.0,         -- Circular mask - same size as icon
-        INTERRUPT_MAIN = 0.8,    -- Interrupt container - slightly larger
-        INTERRUPT_BASE = 0.8,    -- Interrupt texture - same size as icon
-        INTERRUPT_MASK = 0.8,    -- Interrupt mask - same size as icon
+        INTERRUPT_MAIN = 0.98,    -- Interrupt container - slightly larger
+        INTERRUPT_BASE = 0.98,    -- Interrupt texture - same size as icon
+        INTERRUPT_MASK = 0.98,    -- Interrupt mask - same size as icon
         CAST_ANIM = 1.3,         -- Spell cast animation - larger for visibility
         COOLDOWN_FLASH = 1.3,    -- Cooldown flash - larger for visibility
         RETICLE_MAIN = 1.3,      -- Placement reticle - larger for visibility
         RETICLE_MASK = 1.0,      -- Reticle mask - same size as icon
-        PUSHED = 1.3,            -- Pressed state - slightly larger
-        NORMAL = 1.3             -- Border overlay - same size as icon
+        PUSHED = 1.38,            -- Pressed state - slightly larger
+        NORMAL = 1.38             -- Border overlay - same size as icon
     }
 
     if button.SpellCastAnimFrame then
@@ -240,7 +241,7 @@ local function StyleActionButton(button)
     end
 
     if button.HighlightTexture then
-        button.HighlightTexture:SetAtlas("UI-CooldownManager-OORshadow-2x")
+        button.HighlightTexture:SetAtlas(TEXTURES.HIGHLIGHT)
         button.HighlightTexture:SetAlpha(0.5)
         --button.HighlightTexture:SetBlendMode("ADD")
         button.HighlightTexture:ClearAllPoints()
@@ -261,7 +262,7 @@ local function StyleActionButton(button)
     end
 
     if button.CheckedTexture then
-        button.CheckedTexture:SetAtlas("UI-HUD-CoolDownManager-IconOverlay")
+        button.CheckedTexture:SetAtlas(TEXTURES.CHECKED)
         button.CheckedTexture:SetDesaturated(true)
         button.CheckedTexture:SetBlendMode("ADD")
         button.CheckedTexture:SetVertexColor(0.3, 0.9, 0.3, 1)
@@ -279,7 +280,7 @@ local function StyleActionButton(button)
 
     -- Style NormalTexture overlay (same size as icon)
     if button.NormalTexture and button.icon then
-        button.NormalTexture:SetAtlas("UI-HUD-CoolDownManager-IconOverlay")
+        button.NormalTexture:SetAtlas(TEXTURES.NORMAL)
         button.NormalTexture:ClearAllPoints()
 
         local normalSize = iconWidth * RATIOS.NORMAL
@@ -292,14 +293,14 @@ local function StyleActionButton(button)
         -- Very light zoom (3% crop) to hide the 1-2px built-in texture border
         button.icon:SetTexCoord(0.03, 0.97, 0.03, 0.97)
 
-        -- Apply circular mask to contain the icon cleanly
+        -- Apply mask to contain the icon cleanly (uses texture path)
         if ns.modules.masks then
-            ns.modules.masks:ApplyMask(button.icon, "interface\\hud\\uicooldownmanagermask")
+            ns.modules.masks:ApplyMask(button.icon, TEXTURES.ICON_MASK_PATH)
         end
     end
 
     if button.PushedTexture then
-        button.PushedTexture:SetAtlas("UI-CooldownManager-ActiveGlow-2x")
+        button.PushedTexture:SetAtlas(TEXTURES.PUSHED)
         --button.PushedTexture:SetDesaturated(true)
         -- button.PushedTexture:SetVertexColor(1, 0.2, 0.2, 1)
         --button.PushedTexture:SetBlendMode("ADD")
@@ -310,7 +311,7 @@ local function StyleActionButton(button)
     end
 
     if button.IconMask then
-        button.IconMask:SetAtlas("UI-HUD-CoolDownManager-Mask")
+        button.IconMask:SetAtlas(TEXTURES.ICON_MASK_ATLAS)
         local maskSize = iconWidth * RATIOS.ICON_MASK
         button.IconMask:SetSize(maskSize, maskSize)
         -- IconMask should stay anchored to the icon, not the button
