@@ -365,6 +365,22 @@ eventFrame:SetScript("OnEvent", function()
                 StyleActionButton(button)
             end
         end
+
+        -- Apply styling to possess bar (vehicle/mind control buttons)
+        for i = 1, 2 do
+            local button = _G["PossessButton" .. i]
+            if button then
+                StyleActionButton(button)
+            end
+        end
+
+        -- Apply styling to pet action bar
+        for i = 1, 10 do
+            local button = _G["PetActionButton" .. i]
+            if button then
+                StyleActionButton(button)
+            end
+        end
     end)
 end)
 
@@ -400,6 +416,22 @@ function ActionBarStyling:UpdateSettings()
     -- Also restyle stance bar
     for i = 1, 10 do
         local button = _G["StanceButton" .. i]
+        if button then
+            StyleActionButton(button)
+        end
+    end
+
+    -- Restyle possess bar
+    for i = 1, 2 do
+        local button = _G["PossessButton" .. i]
+        if button then
+            StyleActionButton(button)
+        end
+    end
+
+    -- Restyle pet action bar
+    for i = 1, 10 do
+        local button = _G["PetActionButton" .. i]
         if button then
             StyleActionButton(button)
         end
