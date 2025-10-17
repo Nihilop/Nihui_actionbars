@@ -1,6 +1,18 @@
 -- Nihui ActionBars - Action Bar Styling module (based on rnxmUI)
 local addonName, ns = ...
 
+-- ===========================
+-- TEXTURE CONFIGURATION
+-- ===========================
+-- Configure all visual state textures here
+local TEXTURES = {
+    HIGHLIGHT = "UI-CooldownManager-OORshadow-2x",           -- Hover/mouseover glow
+    CHECKED = "UI-HUD-CoolDownManager-IconOverlay",          -- Active/toggled state
+    NORMAL = "UI-HUD-CoolDownManager-IconOverlay",           -- Border overlay
+    PUSHED = "UI-CooldownManager-ActiveGlow-2x",             -- Pressed/click state
+    ICON_MASK = "interface\\hud\\uicooldownmanagermask",     -- Icon masking (rounded square)
+}
+
 local function StyleActionButton(button)
     if not button then return end
 
@@ -8,6 +20,36 @@ local function StyleActionButton(button)
     if button.UpdateButtonArt then
         button.UpdateButtonArt = function() end
     end
+
+    -- ===========================
+    -- PROPORTIONAL SIZING SYSTEM
+    -- ===========================
+    -- Get base icon size for all calculations
+    local iconWidth, iconHeight = 36, 36  -- Default fallback for standard action buttons
+    if button.icon then
+        local w, h = button.icon:GetSize()
+        if w > 0 and h > 0 then
+            iconWidth, iconHeight = w, h
+        end
+    end
+
+    -- Define scaling ratios (relative to icon size)
+    -- Most overlays are 1.0x (same size as icon) with different z-index/blend modes
+    -- Only large animations are bigger for visual impact
+    local RATIOS = {
+        HIGHLIGHT = 0.98,         -- Hover glow - same size as icon
+        CHECKED = 1.0,           -- Active state - same size as icon
+        ICON_MASK = 1.0,         -- Circular mask - same size as icon
+        INTERRUPT_MAIN = 0.8,    -- Interrupt container - slightly larger
+        INTERRUPT_BASE = 0.8,    -- Interrupt texture - same size as icon
+        INTERRUPT_MASK = 0.8,    -- Interrupt mask - same size as icon
+        CAST_ANIM = 1.3,         -- Spell cast animation - larger for visibility
+        COOLDOWN_FLASH = 1.3,    -- Cooldown flash - larger for visibility
+        RETICLE_MAIN = 1.3,      -- Placement reticle - larger for visibility
+        RETICLE_MASK = 1.0,      -- Reticle mask - same size as icon
+        PUSHED = 1.3,            -- Pressed state - slightly larger
+        NORMAL = 1.3             -- Border overlay - same size as icon
+    }
 
     if button.SpellCastAnimFrame then
         -- Style the Fill frame's FillMask texture (controls the masking)
@@ -48,7 +90,8 @@ local function StyleActionButton(button)
 
         -- Position and size the main SpellCastAnimFrame
         button.SpellCastAnimFrame:ClearAllPoints()
-        button.SpellCastAnimFrame:SetSize(59, 59)
+        local castSize = iconWidth * RATIOS.CAST_ANIM
+        button.SpellCastAnimFrame:SetSize(castSize, castSize)
         button.SpellCastAnimFrame:SetPoint("CENTER", button, "CENTER", 0, 0)
     end
 
@@ -64,8 +107,9 @@ local function StyleActionButton(button)
         -- Style the Highlight frame's Mask (interrupt highlight mask)
         if button.InterruptDisplay.Highlight and button.InterruptDisplay.Highlight.Mask then
             if button.InterruptDisplay.Highlight.Mask.SetAtlas then
-                button.InterruptDisplay.Highlight.Mask:SetAtlas("UI-HUD-CoolDownManager-Mask") -- Temporary - your mask
-                button.InterruptDisplay.Highlight.Mask:SetSize(42, 42)
+                button.InterruptDisplay.Highlight.Mask:SetAtlas("UI-HUD-CoolDownManager-Mask")
+                local interruptMaskSize = iconWidth * RATIOS.INTERRUPT_MASK
+                button.InterruptDisplay.Highlight.Mask:SetSize(interruptMaskSize, interruptMaskSize)
             end
         end
 
@@ -75,7 +119,8 @@ local function StyleActionButton(button)
                 button.InterruptDisplay.Base.Base:SetTexture("Interface\\addons\\Nihui_ab\\textures\\UI_CRB_Anim_Ability_Interrupt")
                 button.InterruptDisplay.Base.Base:SetVertexColor(1, 1, 1, 1)
 
-                button.InterruptDisplay.Base.Base:SetSize(41, 41) -- or whatever size you want
+                local interruptBaseSize = iconWidth * RATIOS.INTERRUPT_BASE
+                button.InterruptDisplay.Base.Base:SetSize(interruptBaseSize, interruptBaseSize)
                 button.InterruptDisplay.Base.Base:ClearAllPoints()
                 button.InterruptDisplay.Base.Base:SetPoint("CENTER", button.InterruptDisplay.Base, "CENTER")
 
@@ -106,7 +151,8 @@ local function StyleActionButton(button)
 
         -- Position and size the InterruptDisplay
         button.InterruptDisplay:ClearAllPoints()
-        button.InterruptDisplay:SetSize(45, 45)
+        local interruptSize = iconWidth * RATIOS.INTERRUPT_MAIN
+        button.InterruptDisplay:SetSize(interruptSize, interruptSize)
         button.InterruptDisplay:SetPoint("CENTER", button, "CENTER", 0, 0)
     end
 
@@ -163,13 +209,15 @@ local function StyleActionButton(button)
         if button.TargetReticleAnimFrame.Mask then
             if button.TargetReticleAnimFrame.Mask.SetAtlas then
                 button.TargetReticleAnimFrame.Mask:SetAtlas("UI-HUD-CoolDownManager-Mask")
-                button.TargetReticleAnimFrame.Mask:SetSize(45, 45)
+                local reticleMaskSize = iconWidth * RATIOS.RETICLE_MASK
+                button.TargetReticleAnimFrame.Mask:SetSize(reticleMaskSize, reticleMaskSize)
             end
         end
 
         -- Position and size the TargetReticleAnimFrame
         button.TargetReticleAnimFrame:ClearAllPoints()
-        button.TargetReticleAnimFrame:SetSize(60, 60)
+        local reticleSize = iconWidth * RATIOS.RETICLE_MAIN
+        button.TargetReticleAnimFrame:SetSize(reticleSize, reticleSize)
         button.TargetReticleAnimFrame:SetPoint("CENTER", button, "CENTER", 0, 0)
     end
 
@@ -186,7 +234,8 @@ local function StyleActionButton(button)
 
         -- Position and size the CooldownFlash
         button.CooldownFlash:ClearAllPoints()
-        button.CooldownFlash:SetSize(59, 59)
+        local flashSize = iconWidth * RATIOS.COOLDOWN_FLASH
+        button.CooldownFlash:SetSize(flashSize, flashSize)
         button.CooldownFlash:SetPoint("CENTER", button, "CENTER", 0, 0)
     end
 
@@ -194,9 +243,10 @@ local function StyleActionButton(button)
         button.HighlightTexture:SetAtlas("UI-CooldownManager-OORshadow-2x")
         button.HighlightTexture:SetAlpha(0.5)
         --button.HighlightTexture:SetBlendMode("ADD")
-        button.HighlightTexture:ClearAllPoints() -- Clear any existing anchors first
-        button.HighlightTexture:SetSize(41.5, 41.5) -- Your custom size
-        button.HighlightTexture:SetPoint("CENTER", button, "CENTER") -- Center it on the button
+        button.HighlightTexture:ClearAllPoints()
+        local highlightSize = iconWidth * RATIOS.HIGHLIGHT
+        button.HighlightTexture:SetSize(highlightSize, highlightSize)
+        button.HighlightTexture:SetPoint("CENTER", button, "CENTER")
     end
 
     if button.cooldown then
@@ -217,7 +267,8 @@ local function StyleActionButton(button)
         button.CheckedTexture:SetVertexColor(0.3, 0.9, 0.3, 1)
         button.CheckedTexture:SetAlpha(0.7)
         button.CheckedTexture:ClearAllPoints()
-        button.CheckedTexture:SetSize(42, 42)
+        local checkedSize = iconWidth * RATIOS.CHECKED
+        button.CheckedTexture:SetSize(checkedSize, checkedSize)
         button.CheckedTexture:SetPoint("CENTER", button, "CENTER")
     end
 
@@ -226,12 +277,25 @@ local function StyleActionButton(button)
         button.SlotBackground:SetAllPoints(button) -- Consistent sizing
     end
 
-    -- Remove borders - this is the key part for clean buttons
-    if button.NormalTexture then
+    -- Style NormalTexture overlay (same size as icon)
+    if button.NormalTexture and button.icon then
         button.NormalTexture:SetAtlas("UI-HUD-CoolDownManager-IconOverlay")
-        button.NormalTexture:ClearAllPoints() -- Clear any existing anchors first
-        button.NormalTexture:SetSize(60, 60) -- Your custom size
-        button.NormalTexture:SetPoint("CENTER", button, "CENTER", 0, 0)
+        button.NormalTexture:ClearAllPoints()
+
+        local normalSize = iconWidth * RATIOS.NORMAL
+        button.NormalTexture:SetSize(normalSize, normalSize)
+        button.NormalTexture:SetPoint("CENTER", button.icon, "CENTER", 0, 0)
+    end
+
+    -- Crop icon texture to remove built-in border and apply mask
+    if button.icon then
+        -- Very light zoom (3% crop) to hide the 1-2px built-in texture border
+        button.icon:SetTexCoord(0.03, 0.97, 0.03, 0.97)
+
+        -- Apply circular mask to contain the icon cleanly
+        if ns.modules.masks then
+            ns.modules.masks:ApplyMask(button.icon, "interface\\hud\\uicooldownmanagermask")
+        end
     end
 
     if button.PushedTexture then
@@ -239,52 +303,74 @@ local function StyleActionButton(button)
         --button.PushedTexture:SetDesaturated(true)
         -- button.PushedTexture:SetVertexColor(1, 0.2, 0.2, 1)
         --button.PushedTexture:SetBlendMode("ADD")
-        button.PushedTexture:ClearAllPoints() -- Clear any existing anchors first
-        button.PushedTexture:SetSize(63, 63) -- Your custom size
-        button.PushedTexture:SetPoint("CENTER", button, "CENTER", 0.5, -1) -- Center it on the button
+        button.PushedTexture:ClearAllPoints()
+        local pushedSize = iconWidth * RATIOS.PUSHED
+        button.PushedTexture:SetSize(pushedSize, pushedSize)
+        button.PushedTexture:SetPoint("CENTER", button, "CENTER", 0.5, -1)
     end
 
     if button.IconMask then
-        button.IconMask:SetAtlas("UI-HUD-CoolDownManager-Mask") --SetTexture("Interface\\AddOns\\rnxmUI\\masks\\UICooldownManagerMask.tga")
-        button.IconMask:SetSize(45, 45)
+        button.IconMask:SetAtlas("UI-HUD-CoolDownManager-Mask")
+        local maskSize = iconWidth * RATIOS.ICON_MASK
+        button.IconMask:SetSize(maskSize, maskSize)
         -- IconMask should stay anchored to the icon, not the button
     end
-end
-
--- Copy the UI_CRB_Anim_Ability_Interrupt texture from rnxmUI if not already present
-local function EnsureInterruptTexture()
-    -- Check if texture exists, if not copy from rnxmUI
-    local sourcePath = "E:\\Battle.net\\World of Warcraft\\_retail_\\Interface\\AddOns\\rnxmUI\\Textures\\UI_CRB_Anim_Ability_Interrupt.tga"
-    local targetPath = "E:\\Battle.net\\World of Warcraft\\_retail_\\Interface\\AddOns\\Nihui_ab\\textures\\UI_CRB_Anim_Ability_Interrupt.tga"
-
-    -- This is handled by the file copy we did earlier
 end
 
 -- Only apply styling during PLAYER_ENTERING_WORLD or ADDON_LOADED events
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:SetScript("OnEvent", function()
-    -- All action bar button names
-    local barNames = {
-        "ActionButton",              -- Main action bar
-        "MultiBarBottomLeftButton",  -- Bottom left bar
-        "MultiBarBottomRightButton", -- Bottom right bar
-        "MultiBarLeftButton",        -- Left bar
-        "MultiBarRightButton",       -- Right bar
-        "MultiBar5Button",           -- Extra bar 5
-        "MultiBar6Button",           -- Extra bar 6
-        "MultiBar7Button"            -- Extra bar 7
-    }
+    -- Force EditMode to apply saved positions for StanceBar
+    C_Timer.After(0.1, function()
+        -- Try to force EditMode to update StanceBar position
+        if EditModeManagerFrame and StanceBar then
+            -- Find the StanceBar system in EditMode
+            local stanceBarSystem = EditModeManagerFrame:GetSystemFrame(Enum.EditModeSystem.StanceBar)
+            if stanceBarSystem then
+                -- Force update position from saved layout
+                stanceBarSystem:UpdateSystem(EditModeManagerFrame:GetActiveLayout())
+            end
+        end
 
-    -- Apply styling to all action bars
-    for _, barName in ipairs(barNames) do
-        for i = 1, 12 do
-            local button = _G[barName .. i]
+        -- Also try calling Update on StanceBar itself
+        if StanceBar and StanceBar.Update then
+            StanceBar:Update()
+        end
+    end)
+
+    -- Delay styling to let Blizzard apply edit mode positions first
+    C_Timer.After(0.5, function()
+        -- All action bar button names
+        local barNames = {
+            "ActionButton",              -- Main action bar
+            "MultiBarBottomLeftButton",  -- Bottom left bar
+            "MultiBarBottomRightButton", -- Bottom right bar
+            "MultiBarLeftButton",        -- Left bar
+            "MultiBarRightButton",       -- Right bar
+            "MultiBar5Button",           -- Extra bar 5
+            "MultiBar6Button",           -- Extra bar 6
+            "MultiBar7Button"            -- Extra bar 7
+        }
+
+        -- Apply styling to all action bars
+        for _, barName in ipairs(barNames) do
+            for i = 1, 12 do
+                local button = _G[barName .. i]
+                if button then
+                    StyleActionButton(button)
+                end
+            end
+        end
+
+        -- Apply styling to stance bar
+        for i = 1, 10 do
+            local button = _G["StanceButton" .. i]
             if button then
                 StyleActionButton(button)
             end
         end
-    end
+    end)
 end)
 
 -- Module API for integration with Nihui_ab
@@ -313,6 +399,14 @@ function ActionBarStyling:UpdateSettings()
             if button then
                 StyleActionButton(button)
             end
+        end
+    end
+
+    -- Also restyle stance bar
+    for i = 1, 10 do
+        local button = _G["StanceButton" .. i]
+        if button then
+            StyleActionButton(button)
         end
     end
 end

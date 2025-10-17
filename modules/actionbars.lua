@@ -36,6 +36,12 @@ local function GetBlizzardActionButtons()
             end
         end
 
+        -- Stance bar (Druid forms, Warrior stances, etc.)
+        for i = 1, 10 do
+            local button = _G["StanceButton" .. i]
+            if button then table.insert(buttons, button) end
+        end
+
         cachedButtons = buttons
     end
 
@@ -189,7 +195,8 @@ local function SetupKeybindColorHooks()
         "MultiBar5Button",
         "MultiBar6Button",
         "MultiBar7Button",
-        "PetActionButton"
+        "PetActionButton",
+        "StanceButton"
     }
 
     for i = 1, 12 do
@@ -217,9 +224,10 @@ local function InitializeSystem()
     local eventFrame = CreateFrame("Frame")
     eventFrame:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
     eventFrame:RegisterEvent("UPDATE_BINDINGS")
+    eventFrame:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")  -- Stance bar updates
 
     eventFrame:SetScript("OnEvent", function(self, event, ...)
-        if event == "ACTIONBAR_SLOT_CHANGED" or event == "UPDATE_BINDINGS" then
+        if event == "ACTIONBAR_SLOT_CHANGED" or event == "UPDATE_BINDINGS" or event == "UPDATE_SHAPESHIFT_FORMS" then
             local buttons = GetBlizzardActionButtons()
             for _, button in ipairs(buttons) do
                 ApplyTextStyling(button)

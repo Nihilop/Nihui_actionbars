@@ -2,7 +2,7 @@
 ## Title: |cff00ff00Nihui|r |cffffffffActionBars|r
 ## Author: nihil (based on rnxmUI)
 ## Notes: Addon complet pour la gestion des barres d'action - Masks, Spell Break, Placement des textes
-## Version: 1.0
+## Version: 1.0.0
 ## IconTexture: Interface/AddOns/Nihui_ab/textures/icon.tga
 ## SavedVariables: NihuiActionBarsDB
 
