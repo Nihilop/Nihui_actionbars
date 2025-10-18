@@ -1,8 +1,10 @@
 ## Interface: 110205
 ## Title: |cff00ff00Nihui|r |cffffffffActionBars|r
+## Category: NihUI
 ## Author: nihil (based on rnxmUI)
 ## Notes: Addon complet pour la gestion des barres d'action - Masks, Spell Break, Placement des textes
 ## Version: 1.0.0
+## IconAtlas: GarrMission_MissionIcon-Combat
 ## SavedVariables: NihuiActionBarsDB
 
 # Libraries
