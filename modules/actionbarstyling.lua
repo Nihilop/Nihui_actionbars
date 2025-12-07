@@ -316,7 +316,9 @@ end
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:SetScript("OnEvent", function()
+    -- COMMENTED OUT: This code was causing errors - GetSystemFrame() is not a valid API method
     -- Force EditMode to apply saved positions for StanceBar
+    --[[
     C_Timer.After(0.1, function()
         -- Try to force EditMode to update StanceBar position
         if EditModeManagerFrame and StanceBar then
@@ -333,6 +335,7 @@ eventFrame:SetScript("OnEvent", function()
             StanceBar:Update()
         end
     end)
+    --]]
 
     -- Delay styling to let Blizzard apply edit mode positions first
     C_Timer.After(0.5, function()
